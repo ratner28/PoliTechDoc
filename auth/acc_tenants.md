@@ -125,17 +125,16 @@ POST: /tnts
 <td style="width: 50%; height: 18px; text-align: center;"><strong>Описание</strong></td>
 </tr>
 <tr style="height: 18px;">
-<td style="width: 25%; height: 18px;"><span>code</span></td>
-<td style="width: 12.5%;"><span>string</span></td>
-<td style="width: 12.5%; text-align: center;"><span>Да</span></td>
-<td style="width: 50%; height: 18px;">Код тената</td>
-</tr>
-<tr style="height: 18px;">
 <td style="width: 25%; height: 18px;"><span>id</span></td>
 <td style="width: 12.5%;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center;"><span>Да</span></td>
 <td style="width: 50%; height: 18px;">Идентфиикатор тената</td>
 </tr>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;"><span>code</span></td>
+<td style="width: 12.5%;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Да</span></td>
+<td style="width: 50%; height: 18px;">Код тената</td>
         </tr>
 <tr style="height: 18px;">
 <td style="width: 25%; height: 18px;"><span>name</span></td>
@@ -157,14 +156,20 @@ POST: /tnts
 
 ### Название сценария: Создание тената
 #### Триггер: Вызван метод POST /tnts
-#### Сценарий (успешный):
-<p>1.  Создать в табалице acc_tenants запись
-<p>1.1. Поле id = сгенирировать уникальный идентфикатор</p>
-<p>1.2. Поле code = записать значение из вход. параметра "code" </p>
-<p>1.3. Поле created_at = время/дата текущая</p>
-<p>1.4. Поле&nbsp;is_deleted = по умаолчанию false</p>
-<p>1.5. Поле updated_at = NULL</p>
-2. Вернуть ответ POST /tnts, где "id" =  уникальный идентфикатор из шага "1.1", "code" из шага "1.2"
+#### Сценарий :
+<p>1.Проверить по code наличие тената в таблице acc_tenants. Если сопадение найдено, то перейти на шаг 2, иначе исключение 2а </p></p>
+<p>2.Проверить количество символов code, используя рег. выражение ^[a-zA-Z]{1,5}$. Если условия выполнены, то перейти на шаг 3, иначе исключение 3а</p>
+<p>3.  Создать в табалице acc_tenants запись</p>
+<p>3.1. Поле id = сгенирировать уникальный идентфикатор</p>
+<p>3.2. Поле code = записать значение из вход. параметра "code" </p>
+<p>3.3. Поле created_at = время/дата текущая</p>
+<p>3.4. Поле&nbsp;is_deleted = по умаолчанию false</p>
+<p>4.5. Поле updated_at = NULL</p>
+5. Вернуть ответ POST /tnts, где "id" =  уникальный идентфикатор из шага "1.1", "code" из шага "1.2"
+
+#### Иключение 
+2а Сформировать сообщение об ошибке POST /tnts</p> и завершить сценарий
+3а Сформировать сообщение об ошибке POST /tnts</p> и завершить сценарий
 
 ### Логика получения данных
 #### Название метода:
@@ -190,17 +195,21 @@ No parameters
 <td style="width: 50%; text-align: center;">-</td>
 </tr>
 <tr style="height: 18px;">
+<td style="width: 25%; height: 18px;"><span>id</span></td>
+<td style="width: 12.5%;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Да</span></td>
+<td style="width: 50%; height: 18px;">Идентфиикатор тената</td>
+</tr>
+<td style="width: 25%; height: 18px; text-align: center;"><span>code</span></td>
+<td style="width: 12.5%; text-align: center;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Да</span></td>
+<td style="width: 50%; height: 18px; text-align: center;">Код тената</td>
+</tr>
+<tr style="height: 18px;">
 <td style="width: 25%; height: 18px; text-align: center;"><span>name</span></td>
 <td style="width: 12.5%; text-align: center;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center;"><span>Да</span></td>
 <td style="width: 50%; height: 18px; text-align: center;">Наменование&nbsp;тената</td>
-</tr>
-<tr style="height: 18px;">
-<td style="width: 25%; height: 18px; text-align: center;"><span>id</span></td>
-<td style="width: 12.5%; text-align: center;"><span>string</span></td>
-<td style="width: 12.5%; text-align: center;"><span>Да</span></td>
-<td style="width: 50%; height: 18px; text-align: center;">Идентфиикатор тената</td>
-</tr>
 </tbody>
 </table>
 <p>Пример ответа:&nbsp;</p>
