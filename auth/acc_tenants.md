@@ -21,12 +21,20 @@
 <td style="text-align: center; width: 103.238px;">1</td>
 <td style="text-align: center; height: 36px; width: 156.35px;">Идентификатор записи</td>
 </tr>
+    <tr style="height: 36px;">
+<td style="text-align: center; height: 36px; width: 84.5125px;">code</td>
+<td style="text-align: center; height: 36px; width: 44.225px;">-</td>
+<td style="text-align: center; height: 36px; width: 107.488px;">VARCHAR(5)</td>
+<td style="text-align: center; height: 36px; width: 138.788px;">Да</td>
+<td style="text-align: center; width: 103.238px;">VSK</td>
+<td style="text-align: center; height: 36px; width: 156.35px;">Код тената</td>
+</tr>
 <tr style="height: 36px;">
 <td style="text-align: center; height: 36px; width: 84.5125px;">name</td>
 <td style="text-align: center; height: 36px; width: 44.225px;">-</td>
-<td style="text-align: center; height: 36px; width: 107.488px;"> VARCHAR(250)</td>
+<td style="text-align: center; height: 36px; width: 107.488px;"> VARCHAR(300)</td>
 <td style="text-align: center; height: 36px; width: 138.788px;">Да</td>
-<td style="text-align: center; width: 103.238px;">VSK</td>
+<td style="text-align: center; width: 103.238px;">Вск. Продажа договоров страхования</td>
 <td style="text-align: center; height: 36px; width: 156.35px;">Наименование тената</td>
 </tr>
 <tr style="height: 72px;">
@@ -60,7 +68,8 @@
 ~~~
 CREATE TABLE IF NOT EXISTS acc_tenants (
     id BIGINT PRIMARY KEY DEFAULT nextval('account_seq'),
-    name VARCHAR(250) NOT NULL,
+    code VARCHAR(250) NOT NULL,
+    name VARCHAR(300) NOT NULL,
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -85,18 +94,26 @@ POST: /tnts
 <td style="width: 50%; height: 18px; text-align: center;"><strong>Описание</strong></td>
 </tr>
 <tr style="height: 18px;">
+<td style="width: 25%; height: 18px;"><span>code</span></td>
+<td style="width: 12.5%;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Да</span></td>
+<td style="width: 50%; height: 18px;">Код тената</td>
+</tr>
+    </tr>
+<tr style="height: 18px;">
 <td style="width: 25%; height: 18px;"><span>name</span></td>
 <td style="width: 12.5%;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center;"><span>Да</span></td>
-<td style="width: 50%; height: 18px;">Наменование&nbsp;тената</td>
+<td style="width: 50%; height: 18px;">Наименование</td>
 </tr>
 </tbody>
 </table>
 <p>Пример запроса:&nbsp;</p>
 <pre>
-{
-  "name": "VSK"
-}
+ {
+ "code": "VSK", 
+ "name": "Вск. Продажа договоров страхования" 
+  }
 </pre>
 <p>Выходные параметры:&nbsp;</p>
 <table border="1" style="border-collapse: collapse; width: 100%; height: 216px;">
@@ -108,10 +125,10 @@ POST: /tnts
 <td style="width: 50%; height: 18px; text-align: center;"><strong>Описание</strong></td>
 </tr>
 <tr style="height: 18px;">
-<td style="width: 25%; height: 18px;"><span>name</span></td>
+<td style="width: 25%; height: 18px;"><span>code</span></td>
 <td style="width: 12.5%;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center;"><span>Да</span></td>
-<td style="width: 50%; height: 18px;">Наменование&nbsp;тената</td>
+<td style="width: 50%; height: 18px;">Код тената</td>
 </tr>
 <tr style="height: 18px;">
 <td style="width: 25%; height: 18px;"><span>id</span></td>
@@ -119,15 +136,23 @@ POST: /tnts
 <td style="width: 12.5%; text-align: center;"><span>Да</span></td>
 <td style="width: 50%; height: 18px;">Идентфиикатор тената</td>
 </tr>
+        </tr>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;"><span>name</span></td>
+<td style="width: 12.5%;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Да</span></td>
+<td style="width: 50%; height: 18px;">Наименование</td>
+</tr>
 </tbody>
 </table>
 <p>Пример ответа:&nbsp;</p>
 <p>Успех, код ответа 201</p>
 <pre>
-{
+ {
  "id":"1",
- "name": "VSK" 
-}
+ "code": "VSK", 
+ "name": "Вск. Продажа договоров страхования" 
+  }
 </pre>
 
 ### Название сценария: Создание тената
@@ -135,11 +160,11 @@ POST: /tnts
 #### Сценарий (успешный):
 <p>1.  Создать в табалице acc_tenants запись
 <p>1.1. Поле id = сгенирировать уникальный идентфикатор</p>
-<p>1.2. Поле name = записать значение из вход. параметра "name" </p>
+<p>1.2. Поле code = записать значение из вход. параметра "code" </p>
 <p>1.3. Поле created_at = время/дата текущая</p>
 <p>1.4. Поле&nbsp;is_deleted = по умаолчанию false</p>
 <p>1.5. Поле updated_at = NULL</p>
-2. Вернуть ответ POST /tnts, где "id" =  уникальный идентфикатор из шага "1.1", "name" из шага "1.2"
+2. Вернуть ответ POST /tnts, где "id" =  уникальный идентфикатор из шага "1.1", "code" из шага "1.2"
 
 ### Логика получения данных
 #### Название метода:
@@ -184,7 +209,8 @@ No parameters
 [
  {
  "id":"1",
- "name": "VSK" 
+ "code": "VSK", 
+ "name": "Вск. Продажа договоров страхования" 
   }
 ]
 </pre>
@@ -198,5 +224,5 @@ No parameters
 SELECT * FROM acc_tenants WHERE is_deleted = FALSE;
 ~~~
 
-<p>2. Вернуть ответ GET /tnts, используя маппинг табл. acc_tenants.id= id метод /tnts, табл. acc_tenants.name = name метод /tnts </td>
+<p>2. Вернуть ответ GET /tnts, используя маппинг табл. acc_tenants.id= id метод /tnts, табл. acc_tenants.name = name, табл. acc_tenants.code = code метод /tnts </td>
 
