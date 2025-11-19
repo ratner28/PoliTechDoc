@@ -18,7 +18,7 @@
 <td style="text-align: center; height: 36px; width: 44.225px;">PK</td>
 <td style="text-align: center; height: 36px; width: 107.488px;">BIGINT</td>
 <td style="text-align: center; height: 36px; width: 138.788px;">Да</td>
-<td style="text-align: center; width: 103.238px;">1111111111111111</td>
+<td style="text-align: center; width: 103.238px;">1</td>
 <td style="text-align: center; height: 36px; width: 156.35px;">Идентификатор записи</td>
 </tr>
 <tr style="height: 36px;">
@@ -26,7 +26,7 @@
 <td style="text-align: center; height: 36px; width: 44.225px;">-</td>
 <td style="text-align: center; height: 36px; width: 107.488px;"> VARCHAR(250)</td>
 <td style="text-align: center; height: 36px; width: 138.788px;">Да</td>
-<td style="text-align: center; width: 103.238px;">PARTAPI</td>
+<td style="text-align: center; width: 103.238px;">VSK</td>
 <td style="text-align: center; height: 36px; width: 156.35px;">Наименование тената</td>
 </tr>
 <tr style="height: 72px;">
@@ -95,7 +95,7 @@ POST: /tnts
 <p>Пример запроса:&nbsp;</p>
 <pre>
 {
-  "name": "PARTAPI"
+  "name": "VSK"
 }
 </pre>
 <p>Выходные параметры:&nbsp;</p>
@@ -125,8 +125,8 @@ POST: /tnts
 <p>Успех, код ответа 201</p>
 <pre>
 {
- "id":"1111111111111111",
- "name": "PARTAPI" 
+ "id":"1",
+ "name": "VSK" 
 }
 </pre>
 
@@ -183,8 +183,8 @@ No parameters
 <pre>
 [
  {
- "id":"1111111111111111",
- "name": "PARTAPI" 
+ "id":"1",
+ "name": "VSK" 
   }
 ]
 </pre>
