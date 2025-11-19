@@ -61,7 +61,8 @@ VALUES ('2', '1', 'СРАВНИ', 'SRAVNI', 'false', '2025-11-20T15:30:00Z');
 ИЛИ 
 
 Использовать метод POST /tnts/{tenantId}/clients (см. описание метода https://github.com/AsyaBarinova/PoliTechDoc/blob/patch-1/auth/acc_clients.md)
-
+<p>Результат шага: создан партнер, привязанный к определенному тенату VSK</p>
+<p>Пример записи в таблице:</p> 
 <table border="1" style="border-collapse: collapse; width: 100%; height: 72px;">
 <tbody>
 <tr style="height: 18px;">
