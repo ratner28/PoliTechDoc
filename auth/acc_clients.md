@@ -158,7 +158,7 @@ POST /tnts/{tenantId}/clients
 <pre> {
  "clientId": "SRAVNI", 
  "name": "СРАВНИ", 
- "default_account_id": "3"
+ "defaultAccountId": "3"
   }
 </pre>
 <p>Выходные параметры:&nbsp;</p>
@@ -183,7 +183,7 @@ POST /tnts/{tenantId}/clients
 <td style="width: 50%; height: 18px;"><span>client_id партнера</span></td>
 </tr>
 <tr style="height: 90px;">
-<td style="width: 25%; height: 90px;"><span>default_account_id</span></td>
+<td style="width: 25%; height: 90px;"><span>defaultAccountId</span></td>
 <td style="width: 12.5%; height: 90px;"><span>&nbsp;string</span></td>
 <td style="width: 12.5%; text-align: center; height: 90px;"><span>Нет</span></td>
 <td style="width: 50%; height: 90px;"><span>Id портфеля, в который будут попадать договоры, если не указан целевой портфель.</span></td>
@@ -198,11 +198,42 @@ POST /tnts/{tenantId}/clients
 </table>
 <p></p>
 <p>Пример ответа:&nbsp;</p>
-<p>Успех, код ответа 200</p>
+<p>Успех, код ответа 201</p>
 <pre> {
  "id": "2",
- "default_account_id": "3",
+ "defaultAccountId": "3",
  "clientId": "SRAVNI", 
  "name": "СРАВНИ" 
   }
 </pre>
+
+### Название сценария: Создание клиента
+#### Триггер: Вызван метод /tnts/{tenantId}/clients
+#### Сценарий :
+1. Описать право для создания клиента. Спросить у ОЮ.
+2. Проверить, что заполнные обязательные параметры в теле запроса "clientId","name" и в парамтре пути {tenantId}. Если проверка пройдена, то перейти на шаг 3, иначе исключение 3а
+3. Проверить по tenantId наличие тената в таблице acc_tenants. Если сопадение НЕ найдено, то перейти на шаг 4, иначе исключение 4а
+~~~
+SELECT * FROM acc_tenants WHERE id = <значение tenantId>;
+~~~
+<p>4 Создать в таблице acc_clients запись</p>
+<p>4.1. Поле id = сгенирировать уникальный идентфикатор</p>
+<p>4.2. Поле tid =  значение из вход. параметра "tenantId" </p>
+<p>4.3. Поле client_id = значение из вход. параметра "clientId" </p>
+<p>4.4. Поле default_account_id = значение из вход. параметра  defaultAccountId </p>
+<p>4.5. Поле name = по умолчанию false</p>
+<p>4.6. Поле is_deleted = по умолчанию false</p>
+<p>4.7. Поле created_at = время/дата текущая</p>
+<p>4.8. Поле updated_at = NULL</p>
+<p>4. Вернуть ответ POST/tnts/{tenantId}/clients, где:
+<ul>
+<li>"id" = значение шаг 4.1 &nbsp;</li>
+<li>"defaultAccountId" = значение шаг 4.4 &nbsp;</li>
+<li>"clientId"= значение шаг 4.3 &nbsp;</li>
+<li>"name" = значение шаг 4.5 &nbsp;</li>
+</ul>
+
+#### Иключение 
+3а Сформировать сообщение об ошибке 
+4а Сформировать сообщение об ошибке 
+   
