@@ -12,7 +12,7 @@ INSERT INTO acc_tenants (id, code, name, is_deleted, created_at)
 VALUES ('1', 'VSK', 'Вск. Продажа договоров страхования' 'false', '2025-11-20T15:30:00Z');
 ```
 ИЛИ 
-1. Использовать метод POST /tnts, где на вход передать значение name = VSK (см. описание метода <a href="https://github.com/AsyaBarinova/PoliTechDoc/blob/patch-1/auth/acc_clients.md">PoliTechDoc/auth/acc_clients.md at patch-1 &middot; AsyaBarinova/PoliTechDoc</a>)
+1. Использовать метод POST /tnts, где на вход передать значение code = VSK (см. описание метода <a href="https://github.com/AsyaBarinova/PoliTechDoc/blob/patch-1/auth/acc_clients.md">PoliTechDoc/auth/acc_clients.md at patch-1 &middot; AsyaBarinova/PoliTechDoc</a>)
 
 <p>Результат шага: создан тенат</p>
 <p>Пример записи в таблице:</p> 
