@@ -117,7 +117,7 @@ POST /tnts/{tenantId}/clients
 <td style="width: 12.5%;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center;"><span>Да</span></td>
 <td style="width: 50%; height: 18px;">
-<p>Идентифкатор тената</p>
+<p>Идентификатор тената</p>
 <p></p>
 </td>
 </tr>
@@ -186,7 +186,7 @@ POST /tnts/{tenantId}/clients
 <td style="width: 25%; height: 90px;"><span>defaultAccountId</span></td>
 <td style="width: 12.5%; height: 90px;"><span>&nbsp;string</span></td>
 <td style="width: 12.5%; text-align: center; height: 90px;"><span>Нет</span></td>
-<td style="width: 50%; height: 90px;"><span>Id портфеля, в который будут попадать договоры, если не указан целевой портфель.</span></td>
+<td style="width: 50%; height: 90px;"><span>Id портфеля, в который будут попадать договоры, если не указан целевой портфель</span></td>
 </tr>
 <tr style="height: 18px;">
 <td style="width: 25%; height: 18px;"><span>name</span></td>
@@ -217,7 +217,7 @@ POST /tnts/{tenantId}/clients
 SELECT * FROM acc_tenants WHERE id = <значение tenantId>;
 ~~~
 <p>4 Создать в таблице acc_clients запись</p>
-<p>4.1. Поле id = сгенирировать уникальный идентфикатор</p>
+<p>4.1. Поле id = сгенерировать уникальный идентификатор </p>
 <p>4.2. Поле tid =  значение из вход. параметра "tenantId" </p>
 <p>4.3. Поле client_id = значение из вход. параметра "clientId" </p>
 <p>4.4. Поле default_account_id = значение из вход. параметра  defaultAccountId </p>
@@ -236,4 +236,113 @@ SELECT * FROM acc_tenants WHERE id = <значение tenantId>;
 #### Иключение 
 3а Сформировать сообщение об ошибке 
 4а Сформировать сообщение об ошибке 
+
+### Логика обновления данных
+#### Название метода: 
+```
+PATCH /tnts/{tenantId}/clients/{clientId}
+```
+#### Назначние метода: Обновление данных партнера (клиента)
+
+<p><span>path</span>:&nbsp;</p>
+<table border="1" style="border-collapse: collapse; width: 100%; height: 216px;">
+<tbody>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px; text-align: center;"><strong>Значение параметра</strong></td>
+<td style="width: 12.5%; text-align: center;"><strong>Тип</strong></td>
+<td style="width: 12.5%; text-align: center;"><strong>Обязательность</strong></td>
+<td style="width: 50%; height: 18px; text-align: center;"><strong>Описание</strong></td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;"><span>tenantId</span></td>
+<td style="width: 12.5%;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Да</span></td>
+<td style="width: 50%; height: 18px;">
+<p>Идентификатор тената</p>
+<p></p>
+</td>
+</tr>
+<tr>
+<td style="width: 25%;"><span>clientId</span></td>
+<td style="width: 12.5%;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Да</span></td>
+<td style="width: 50%;">
+<p>Идентификатор партнера (клиента)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Пример запроса:&nbsp;</p>
+<p>PATCH /tnts/1/clients/2</p>
+<pre> { 
+ "name": "СРАВНИ.РУ"
+  }
+</pre>
+<p>Выходные параметры:&nbsp;</p>
+<p><em>Комментарий: Значение tenantId можно получить в таблице acc_tenants поле id, значение&nbsp;<span>clientId в таблице&nbsp;acc_clients поле id</span></em></p>
+<p>body:</p>
+<table border="1" style="border-collapse: collapse; width: 100%; height: 216px;">
+<tbody>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px; text-align: center;"><strong>Значение параметра</strong></td>
+<td style="width: 12.5%; text-align: center;"><strong>Тип</strong></td>
+<td style="width: 12.5%; text-align: center;"><strong>Обязательность</strong></td>
+<td style="width: 50%; height: 18px; text-align: center;"><strong>Описание</strong></td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;"><span>defaultАccountId</span></td>
+<td style="width: 12.5%;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Нет</span></td>
+<td style="width: 50%; height: 18px;">
+<p>Идентификатор тената</p>
+<p></p>
+</td>
+</tr>
+<tr>
+<td style="width: 25%;"><span>name</span></td>
+<td style="width: 12.5%;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Нет</span></td>
+<td style="width: 50%;">
+<p>Наименование партнера (клиента)</p>
+</td>
+</tr>
+<tr>
+<td style="width: 25%;"><span>isDeleted</span><span><br /></span></td>
+<td style="width: 12.5%;"><span>bool</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Нет</span></td>
+<td style="width: 50%;">
+<p><span>Флаг удаления. True - неактивный(удален), false - активный</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Пример ответа:&nbsp;</p>
+<p>Успех, код ответа 200</p>
+<pre> {
+ "name": "СРАВНИ.РУ" 
+  }
+</pre>
+
+### Название сценария:  Обновление данных партнера (клиента)
+#### Триггер: Вызван метод /tnts/{tenantId}/clients/{clientId}
+#### Сценарий :
+1. Проверить налчие ИД тената из запроса "tenantId" в таблице acc_tenants поле id И проверить налчие ИД клиента из запроса значение clientId в таблице acc_clients поле id. Если совпадение найдено, то перейти на след. шаг, иначе исключение 2а
+~~~
+SELECT
+    t.id,              -- ID Арендатора
+    c.id,              -- ID Клиента
+    c.tid AS tid_tenat -- Идентификатор связи (tid)
+FROM
+    acc_tenants t
+JOIN
+    acc_clients c ON t.id = c.tid 
+WHERE
+    t.id = 1 AND c.id = 2; -- фильтрация по конкретным ID записей. Вставляем tenantId (t.id) И clientId (c.id )из запроса
+~~~
+2. Обновить данные в таблице acc_clients на основании запроса в разерезе конкретного ИД клиента. Маппинг для обновления:
+2.1 табл.acc_clients.default_account_id = defaultAccountId
+2.2. табл.acc_clients.name = name
+2.3 табл.acc_clients.is_deleted = isDeleted
    
+#### Иключение 
+2а Сформировать сообщение об ошибке 
