@@ -43,7 +43,7 @@
 <td style="text-align: center; width: 44.225px; height: 36px;">-</td>
 <td style="text-align: center; width: 107.488px; height: 36px;">BIGINT</td>
 <td style="text-align: center; width: 129.25px; height: 36px;">Нет</td>
-<td style="text-align: center; width: 169.113px; height: 36px;"><span>5553372036854775807</span></td>
+<td style="text-align: center; width: 169.113px; height: 36px;"><span>3</span></td>
 <td style="text-align: center; width: 157.55px; height: 36px;">id портфеля, в который будут попадать договоры, если не указан целевой портфель.</td>
 </tr>
 <tr style="height: 36px;">
@@ -140,7 +140,7 @@ POST /tnts/{tenantId}/clients
 <td style="width: 50%; height: 18px;"><span>client_id партнера</span></td>
 </tr>
 <tr style="height: 90px;">
-<td style="width: 25%; height: 90px;"><span>default_account_id</span></td>
+<td style="width: 25%; height: 90px;"><span>defaultAccountId</span></td>
 <td style="width: 12.5%; height: 90px;"><span>&nbsp;string</span></td>
 <td style="width: 12.5%; text-align: center; height: 90px;"><span>Нет</span></td>
 <td style="width: 50%; height: 90px;"><span>Id портфеля, в который будут попадать договоры, если не указан целевой портфель.</span></td>
@@ -212,7 +212,7 @@ POST /tnts/{tenantId}/clients
 #### Сценарий :
 1. Описать право для создания клиента. Спросить у ОЮ.
 2. Проверить, что заполнные обязательные параметры в теле запроса "clientId","name" и в парамтре пути {tenantId}. Если проверка пройдена, то перейти на шаг 3, иначе исключение 3а
-3. Проверить по tenantId наличие тената в таблице acc_tenants. Если сопадение НЕ найдено, то перейти на шаг 4, иначе исключение 4а
+3. Проверить по tenantId наличие тената в таблице acc_tenants. Если запись найдена, то перейти на шаг 4, иначе исключение 4а
 ~~~
 SELECT * FROM acc_tenants WHERE id = <значение tenantId>;
 ~~~
@@ -232,6 +232,7 @@ SELECT * FROM acc_tenants WHERE id = <значение tenantId>;
 <li>"clientId"= значение шаг 4.3 &nbsp;</li>
 <li>"name" = значение шаг 4.5 &nbsp;</li>
 </ul>
+5. Вернуть ответ GET /tnts 
 
 #### Иключение 
 3а Сформировать сообщение об ошибке 
@@ -272,14 +273,7 @@ PATCH /tnts/{tenantId}/clients/{clientId}
 </tr>
 </tbody>
 </table>
-<p>Пример запроса:&nbsp;</p>
-<p>PATCH /tnts/1/clients/2</p>
-<pre> { 
- "name": "СРАВНИ.РУ"
-  }
-</pre>
-<p>Выходные параметры:&nbsp;</p>
-<p><em>Комментарий: Значение tenantId можно получить в таблице acc_tenants поле id, значение&nbsp;<span>clientId в таблице&nbsp;acc_clients поле id</span></em></p>
+<p><em>Комментарий: Значение tenantId можно получить в таблице acc_tenants поле id, значение&nbsp;<span>clientId в таблице&nbsp;acc_clients поле id</span></em>
 <p>body:</p>
 <table border="1" style="border-collapse: collapse; width: 100%; height: 216px;">
 <tbody>
@@ -298,6 +292,14 @@ PATCH /tnts/{tenantId}/clients/{clientId}
 <p></p>
 </td>
 </tr>
+<p>Пример запроса:&nbsp;</p>
+<p>PATCH /tnts/1/clients/2</p>
+<pre> { 
+ "name": "СРАВНИ.РУ"
+  }
+</pre>
+<p>Выходные параметры:&nbsp;</p>
+</p>
 <tr>
 <td style="width: 25%;"><span>name</span></td>
 <td style="width: 12.5%;"><span>string</span></td>
@@ -326,7 +328,7 @@ PATCH /tnts/{tenantId}/clients/{clientId}
 ### Название сценария:  Обновление данных партнера (клиента)
 #### Триггер: Вызван метод /tnts/{tenantId}/clients/{clientId}
 #### Сценарий :
-1. Проверить налчие ИД тената из запроса "tenantId" в таблице acc_tenants поле id И проверить налчие ИД клиента из запроса значение clientId в таблице acc_clients поле id. Если совпадение найдено, то перейти на след. шаг, иначе исключение 2а
+1. Проверить налчие ИД тената из запроса "tenantId" в таблице acc_tenants поле id И проверить налчие ИД клиента из запроса значение clientId в таблице acc_clients поле id. Если запись найдена, то перейти на след. шаг, иначе исключение 2а
 ~~~
 SELECT
     t.id,              -- ID Арендатора
@@ -340,9 +342,23 @@ WHERE
     t.id = 1 AND c.id = 2; -- фильтрация по конкретным ID записей. Вставляем tenantId (t.id) И clientId (c.id )из запроса
 ~~~
 2. Обновить данные в таблице acc_clients на основании запроса в разерезе конкретного ИД клиента. Маппинг для обновления:
-2.1 табл.acc_clients.default_account_id = defaultAccountId
-2.2. табл.acc_clients.name = name
-2.3 табл.acc_clients.is_deleted = isDeleted
-   
-#### Иключение 
-2а Сформировать сообщение об ошибке 
+<p>2.1 табл.acc_clients.default_account_id = defaultAccountId</p>
+<p>2.2 табл.acc_clients.name = name</p>
+<p>2.3 табл.acc_clients.is_deleted = isDeleted.</p>
+<p>2.4 табл.acc_clients.updated_at = Время/дата текущая </p>
+4. Верунть ответ:
+<p><em>*в зависмости от переданных параметров</em></p>
+<ul>
+<li><span>defaultАccountId</span></li>
+<li><span>name</span></li>
+<li><span>isDeleted</span></li>
+</ul> 
+
+### Логика получения данных
+#### Название метода: 
+```
+GET /tnts/{tenantId}/clients
+```
+#### Назначние метода: Получение всех партнеров (клиентов)
+
+
