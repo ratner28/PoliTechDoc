@@ -1,6 +1,6 @@
 ## Таблица: acc_clients
 #### Назначение таблицы: Хранение информации о партнерах (клиентах) с настройками
-#### Стркутра таблицы 
+#### Структура  таблицы 
 
 <table style="width: 717px; height: 313px;">
 <thead>
@@ -86,8 +86,8 @@
 ~~~
 CREATE TABLE IF NOT EXISTS acc_clients (
     tid BIGINT NOT NULL REFERENCES acc_tenants(id),
-    id BIGINT PRIMARY KEY DEFAULT nextval('account_seq'),
-    client_id varchar(255) NOT NULL,
+    id BIGINT PRIMARY KEY,
+    client_idvarchar(255) NOT NULL,
     default_account_id BIGINT,
     name VARCHAR(250) NOT NULL,
     is_deleted BOOLEAN NOT NUL DEFAULT FALSE,
@@ -95,10 +95,13 @@ CREATE TABLE IF NOT EXISTS acc_clients (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ~~~
+### Важно: для всех операций должна быть роль у пользователя админская TNT_ADMIN или SYS_ADMIN
+Описано здесь <p><a href="https://github.com/OlegSirik/PoliTechDoc/blob/main/auth/testScripts.md">PoliTechDoc/auth/testScripts.md at main &middot; OlegSirik/PoliTechDoc</a></p>
+
 ### Логика загрузки данных
 #### Название метода: 
 ```
-POST /tnts/{tenantId}/clients
+POST /tnts/{tenantCode}/clients
 ```
 #### Назначние метода: Создание партнера (клиента)
 
@@ -113,17 +116,17 @@ POST /tnts/{tenantId}/clients
 <td style="width: 50%; height: 18px; text-align: center;"><strong>Описание</strong></td>
 </tr>
 <tr style="height: 18px;">
-<td style="width: 25%; height: 18px;"><span>tenantId</span></td>
+<td style="width: 25%; height: 18px;"><span>tenantCode</span></td>
 <td style="width: 12.5%;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center;"><span>Да</span></td>
 <td style="width: 50%; height: 18px;">
-<p>Идентификатор тената</p>
+<p>Код тенанта</p>
 <p></p>
 </td>
 </tr>
 </tbody>
 </table>
-<p><em>*Комменатрий: значение&nbsp;tenantId можно получить в таблице&nbsp;acc_tenants поле id.</em></p>
+<p><em>*Комменатрий: значение&nbsp;tenantCode можно получить в таблице&nbsp;acc_tenants поле code.</em></p>
 <p>body:</p>
 <table border="1" style="border-collapse: collapse; width: 100%; height: 144px;">
 <tbody>
@@ -154,7 +157,7 @@ POST /tnts/{tenantId}/clients
 </tbody>
 </table>
 <p>Пример запроса:&nbsp;</p>
-<p><a class="nostyle" href="https://app.swaggerhub.com/apis/insur/PoliTechAccounts/2#/tenant_admin/createClient"><span>/tnts<wbr />/1/clients</span></a>&nbsp;</p>
+<p><a class="nostyle" href="https://app.swaggerhub.com/apis/insur/PoliTechAccounts/2#/tenant_admin/createClient"><span>/tnts<wbr />/VSK/clients</span></a>&nbsp;</p>
 <pre> {
  "clientId": "SRAVNI", 
  "name": "СРАВНИ", 
@@ -201,31 +204,35 @@ POST /tnts/{tenantId}/clients
 <p>Успех, код ответа 201</p>
 <pre> {
  "id": "2",
- "defaultAccountId": "3",
  "clientId": "SRAVNI", 
+ "defaultAccountId": "3",
  "name": "СРАВНИ" 
   }
 </pre>
 
 ### Название сценария: Создание клиента
-#### Триггер: Вызван метод /tnts/{tenantId}/clients
+#### Триггер: Вызван метод /tnts/{tenantCode}/clients
 #### Сценарий :
-1. Описать право для создания клиента. Спросить у ОЮ.
-2. Проверить, что заполнные обязательные параметры в теле запроса "clientId","name" и в парамтре пути {tenantId}. Если проверка пройдена, то перейти на шаг 3, иначе исключение 3а
-3. Проверить по tenantId наличие тената в таблице acc_tenants. Если запись найдена, то перейти на шаг 4, иначе исключение 4а
+
+1. Проверить, что заполнены обязательные параметры в теле запроса "clientId","name" и в параметре пути {tenantCode}. Если проверка пройдена, то перейти на шаг 2, иначе исключение 2а
+2. Проверить уникальность клиента. Если clientId в таблице acc_clients НЕ сущесвтует, то перейти на след. шаг, иначе исключение 3а
 ~~~
-SELECT * FROM acc_tenants WHERE id = <значение tenantId>;
+SELECT * FROM acc_clients WHERE client_id= '<значение clientId>';
+~~~
+3. Проверить по tenantCode наличие тенанта в таблице acc_tenants. Если запись найдена, то перейти на шаг 4, иначе исключение 4а
+~~~
+SELECT * FROM acc_tenants WHERE code = '<значение tenantCode>';
 ~~~
 <p>4 Создать в таблице acc_clients запись</p>
 <p>4.1. Поле id = сгенерировать уникальный идентификатор </p>
-<p>4.2. Поле tid =  значение из вход. параметра "tenantId" </p>
-<p>4.3. Поле client_id = значение из вход. параметра "clientId" </p>
+<p>4.2. Поле tid =  ИД тенанта из таблицы acc_tenants поле id (найти по tenantCode) </p>
+<p>4.3. Поле client_id= значение из вход. параметра "clientId" </p>
 <p>4.4. Поле default_account_id = значение из вход. параметра  defaultAccountId </p>
-<p>4.5. Поле name = по умолчанию false</p>
+<p>4.5. Поле name =  значение из вход. параметра name </p>
 <p>4.6. Поле is_deleted = по умолчанию false</p>
 <p>4.7. Поле created_at = время/дата текущая</p>
 <p>4.8. Поле updated_at = NULL</p>
-<p>5. Вернуть ответ POST/tnts/{tenantId}/clients, где:
+<p>5. Вернуть ответ POST/tnts/{tenantCode}/clients, где:
 <ul>
 <li>"id" = значение шаг 4.1 &nbsp;</li>
 <li>"defaultAccountId" = значение шаг 4.4 &nbsp;</li>
@@ -233,14 +240,15 @@ SELECT * FROM acc_tenants WHERE id = <значение tenantId>;
 <li>"name" = значение шаг 4.5 &nbsp;</li>
 </ul>
 
-#### Иключение 
+#### Исключение 
+<p>2а Сформировать сообщение об ошибке </p>
 <p>3а Сформировать сообщение об ошибке </p>
 <p>4а Сформировать сообщение об ошибке </p>
 
 ### Логика обновления данных
 #### Название метода: 
 ```
-PATCH /tnts/{tenantId}/clients/{clientId}
+PATCH /tnts/{tenantCode}/clients/{clientId}
 ```
 #### Назначние метода: Обновление данных партнера (клиента)
 
@@ -255,11 +263,11 @@ PATCH /tnts/{tenantId}/clients/{clientId}
 <td style="width: 50%; height: 18px; text-align: center;"><strong>Описание</strong></td>
 </tr>
 <tr style="height: 18px;">
-<td style="width: 25%; height: 18px;"><span>tenantId</span></td>
+<td style="width: 25%; height: 18px;"><span>tenantCode</span></td>
 <td style="width: 12.5%;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center;"><span>Да</span></td>
 <td style="width: 50%; height: 18px;">
-<p>Идентификатор тената</p>
+<p>Код тенанта </p>
 <p></p>
 </td>
 </tr>
@@ -273,7 +281,7 @@ PATCH /tnts/{tenantId}/clients/{clientId}
 </tr>
 </tbody>
 </table>
-<p><em>Комментарий: Значение tenantId можно получить в таблице acc_tenants поле id, значение&nbsp;<span>clientId в таблице&nbsp;acc_clients поле id</span></em>
+<p><em>Комментарий: Значение tenantCode можно получить в таблице acc_tenants поле code, значение&nbsp;<span>clientId в таблице&nbsp;acc_clients поле client_id</span></em>
 
 <p><span>body</span>:&nbsp;</p>
 <table border="1" style="border-collapse: collapse; width: 100%; height: 216px;">
@@ -289,7 +297,7 @@ PATCH /tnts/{tenantId}/clients/{clientId}
 <td style="width: 12.5%;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center;"><span>Нет</span></td>
 <td style="width: 50%; height: 18px;">
-<p>Идентификатор тената</p>
+<p>Код тенанта </p>
 <p></p>
 </td>
 </tr>
@@ -313,7 +321,7 @@ PATCH /tnts/{tenantId}/clients/{clientId}
 </table>
 
 <p>Пример запроса:&nbsp;</p>
-<p>PATCH /tnts/1/clients/2</p>
+<p>PATCH /tnts/VSK/clients/SRAVNI</p>
 <pre> { 
  "name": "СРАВНИ.РУ"
   }
@@ -334,7 +342,7 @@ PATCH /tnts/{tenantId}/clients/{clientId}
 <td style="width: 12.5%;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center;"><span>Нет</span></td>
 <td style="width: 50%; height: 18px;">
-<p>Идентификатор тената</p>
+<p>Код тенанта </p>
 <p></p>
 </td>
 </tr>
@@ -366,27 +374,27 @@ PATCH /tnts/{tenantId}/clients/{clientId}
 </pre>
 
 ### Название сценария:  Обновление данных партнера (клиента)
-#### Триггер: Вызван метод /tnts/{tenantId}/clients/{clientId}
+#### Триггер: Вызван метод /tnts/{tenantCode}/clients/{clientId}
 #### Сценарий :
-1. Проверить налчие ИД тената из запроса "tenantId" в таблице acc_tenants поле id И проверить налчие ИД клиента из запроса значение clientId в таблице acc_clients поле id. Если запись найдена, то перейти на след. шаг, иначе исключение 2а
+1. Проверить наличие кода тенанта из запроса ("tenantCode") в таблице acc_tenants поле code И проверить наличие клиент ИД из запроса (clientId) в таблице acc_clients поле client_id. Если запись найдена, то перейти на след. шаг, иначе исключение 2а 
 ~~~
 SELECT
     t.id,              -- ID Арендатора
     c.id,              -- ID Клиента
-    c.tid AS tid_tenat -- Идентификатор связи (tid)
+    c.tid  -- Идентификатор связи (tid)
 FROM
     acc_tenants t
 JOIN
     acc_clients c ON t.id = c.tid 
 WHERE
-    t.id = 1 AND c.id = 2; -- фильтрация по конкретным ID записей. Вставляем tenantId (t.id) И clientId (c.id )из запроса
+    t.code = 'VSK' AND c.client_id= 'SRAVNI'; -- фильтрация по конкретным ID записей. Вставляем tenantCode (=t.code) И clientId (=c.client_id)из запроса
 ~~~
 2. Обновить данные в таблице acc_clients на основании запроса в разерезе конкретного ИД клиента. Маппинг для обновления:
 <p>2.1 табл.acc_clients.default_account_id = defaultAccountId</p>
 <p>2.2 табл.acc_clients.name = name</p>
 <p>2.3 табл.acc_clients.is_deleted = isDeleted.</p>
 <p>2.4 табл.acc_clients.updated_at = Время/дата текущая </p>
-4. Верунть ответ:
+3. Верунть ответ:
 <p><em>*в зависмости от переданных параметров</em></p>
 <ul>
 <li><span>defaultАccountId</span></li>
@@ -394,13 +402,13 @@ WHERE
 <li><span>isDeleted</span></li>
 </ul> 
 
-#### Иключение 
+#### Исключение 
 <p>2а Сформировать сообщение об ошибке </p>
 
 ### Логика получения данных
 #### Название метода: 
 ```
-GET /tnts/{tenantId}/clients
+GET /tnts/{tenantCode}/clients
 ```
 #### Назначние метода: Получение всех партнеров (клиентов)
 
@@ -415,11 +423,11 @@ GET /tnts/{tenantId}/clients
 <td style="width: 50%; height: 18px; text-align: center;"><strong>Описание</strong></td>
 </tr>
 <tr style="height: 18px;">
-<td style="width: 25%; height: 18px;"><span>tenantId</span></td>
+<td style="width: 25%; height: 18px;"><span>tenantCode</span></td>
 <td style="width: 12.5%;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center;"><span>Да</span></td>
 <td style="width: 50%; height: 18px;">
-<p>Идентификатор тената</p>
+<p>Код тенанта </p>
 <p></p>
 </td>
 </tr>
@@ -517,18 +525,22 @@ GET /tnts/{tenantId}/clients
 </pre>
 
 ### Название сценария: Получение всех партнеров (клиентов)
-#### Триггер: Вызван метод GET /tnts/{tenantId}/clients
+#### Триггер: Вызван метод GET /tnts/{tenantCode}/clients
 #### Сценарий :
-1. Проверить по tenantId наличие тената в таблице acc_clients. Если запись НЕ найдена, то перейти на шаг 2, иначе исключение 2а
+1. Проверить по tenantCode наличие партнеров в таблице acc_clients. Если запись НЕ найдена, то перейти на шаг 2, иначе исключение 2а
 ~~~
-SELECT *
-с.tid
+SELECT
+    t.id AS tenant_id,
+    t.code AS tenant_code,
+    c.clients_id
 FROM
-    acc_clients c
+    acc_tenants t
+JOIN
+    acc_clients c ON c.tid = t.id
 WHERE
-    c.tid = 1 -- фильтрация по ID тената. Вставляем tenantId 
+    t.code = 'VSK'; -- фильтрация по коду тенанта 'VSK' 
 ~~~
-2. Получить данные из таблицы acc_clients, где указан определнный тенат tenantId 
+2. Получить данные из таблицы acc_clients, где указан определнный тенант tenantCode 
 ~~~
 SELECT *
 t.id,
@@ -543,12 +555,12 @@ FROM
 JOIN
     acc_tenants t ON t.id = c.tid 
 WHERE
-    t.id = 1 -- фильтрация по ID тената. Вставляем tenantId 
+    t.сode = 'VSK' -- фильтрация по коду тенанта
 ~~~
 3. Выполнить маппинг
    <ul>
 <li>acc_clients.id = id&nbsp;</li>
-<li>acc_clients.client_id =&nbsp;clientId</li>
+<li>acc_clients.client_id=&nbsp;clientId</li>
 <li>acc_clients.default_account_id = defaultAccountId</li>
 <li>acc_clients.name = name</li>
 <li>acc_clients.is_deleted = isDeleted</li>
@@ -557,6 +569,6 @@ WHERE
 </ul>
 5. Вернуть ответ
 
-#### Иключение 
+#### Исключение 
 <p>2а Сформировать сообщение об ошибке </p>
 
