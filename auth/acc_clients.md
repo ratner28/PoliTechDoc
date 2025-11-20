@@ -123,7 +123,7 @@ POST /tnts/{tenantId}/clients
 </tr>
 </tbody>
 </table>
-<p>*Комменатрий: значение&nbsp;<span>tenantId можно получить в таблице&nbsp;</span>acc_tenants поле id.</p>
+<p><em>*Комменатрий: значение&nbsp;tenantId можно получить в таблице&nbsp;acc_tenants поле id.</em></p>
 <p>body:</p>
 <table border="1" style="border-collapse: collapse; width: 100%; height: 144px;">
 <tbody>
@@ -225,18 +225,17 @@ SELECT * FROM acc_tenants WHERE id = <значение tenantId>;
 <p>4.6. Поле is_deleted = по умолчанию false</p>
 <p>4.7. Поле created_at = время/дата текущая</p>
 <p>4.8. Поле updated_at = NULL</p>
-<p>4. Вернуть ответ POST/tnts/{tenantId}/clients, где:
+<p>5. Вернуть ответ POST/tnts/{tenantId}/clients, где:
 <ul>
 <li>"id" = значение шаг 4.1 &nbsp;</li>
 <li>"defaultAccountId" = значение шаг 4.4 &nbsp;</li>
 <li>"clientId"= значение шаг 4.3 &nbsp;</li>
 <li>"name" = значение шаг 4.5 &nbsp;</li>
 </ul>
-5. Вернуть ответ GET /tnts 
 
 #### Иключение 
-3а Сформировать сообщение об ошибке 
-4а Сформировать сообщение об ошибке 
+<p>3а Сформировать сообщение об ошибке </p>
+<p>4а Сформировать сообщение об ошибке </p>
 
 ### Логика обновления данных
 #### Название метода: 
@@ -245,6 +244,7 @@ PATCH /tnts/{tenantId}/clients/{clientId}
 ```
 #### Назначние метода: Обновление данных партнера (клиента)
 
+Входящие параметры
 <p><span>path</span>:&nbsp;</p>
 <table border="1" style="border-collapse: collapse; width: 100%; height: 216px;">
 <tbody>
@@ -274,7 +274,8 @@ PATCH /tnts/{tenantId}/clients/{clientId}
 </tbody>
 </table>
 <p><em>Комментарий: Значение tenantId можно получить в таблице acc_tenants поле id, значение&nbsp;<span>clientId в таблице&nbsp;acc_clients поле id</span></em>
-<p>body:</p>
+
+<p><span>body</span>:&nbsp;</p>
 <table border="1" style="border-collapse: collapse; width: 100%; height: 216px;">
 <tbody>
 <tr style="height: 18px;">
@@ -284,7 +285,7 @@ PATCH /tnts/{tenantId}/clients/{clientId}
 <td style="width: 50%; height: 18px; text-align: center;"><strong>Описание</strong></td>
 </tr>
 <tr style="height: 18px;">
-<td style="width: 25%; height: 18px;"><span>defaultАccountId</span></td>
+<td style="width: 25%; height: 18px;">defaultАccountId</td>
 <td style="width: 12.5%;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center;"><span>Нет</span></td>
 <td style="width: 50%; height: 18px;">
@@ -292,16 +293,8 @@ PATCH /tnts/{tenantId}/clients/{clientId}
 <p></p>
 </td>
 </tr>
-<p>Пример запроса:&nbsp;</p>
-<p>PATCH /tnts/1/clients/2</p>
-<pre> { 
- "name": "СРАВНИ.РУ"
-  }
-</pre>
-<p>Выходные параметры:&nbsp;</p>
-</p>
 <tr>
-<td style="width: 25%;"><span>name</span></td>
+<td style="width: 25%;">name</td>
 <td style="width: 12.5%;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center;"><span>Нет</span></td>
 <td style="width: 50%;">
@@ -309,15 +302,62 @@ PATCH /tnts/{tenantId}/clients/{clientId}
 </td>
 </tr>
 <tr>
-<td style="width: 25%;"><span>isDeleted</span><span><br /></span></td>
+<td style="width: 25%;">isDeleted</td>
 <td style="width: 12.5%;"><span>bool</span></td>
 <td style="width: 12.5%; text-align: center;"><span>Нет</span></td>
 <td style="width: 50%;">
-<p><span>Флаг удаления. True - неактивный(удален), false - активный</span></p>
+<p>Флаг удаления&nbsp;</p>
 </td>
 </tr>
 </tbody>
 </table>
+
+<p>Пример запроса:&nbsp;</p>
+<p>PATCH /tnts/1/clients/2</p>
+<pre> { 
+ "name": "СРАВНИ.РУ"
+  }
+</pre>
+<p>Выходные параметры:&nbsp;</p>
+
+<p><span>body</span>:&nbsp;</p>
+<table border="1" style="border-collapse: collapse; width: 100%; height: 216px;">
+<tbody>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px; text-align: center;"><strong>Значение параметра</strong></td>
+<td style="width: 12.5%; text-align: center;"><strong>Тип</strong></td>
+<td style="width: 12.5%; text-align: center;"><strong>Обязательность</strong></td>
+<td style="width: 50%; height: 18px; text-align: center;"><strong>Описание</strong></td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;">defaultАccountId</td>
+<td style="width: 12.5%;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Нет</span></td>
+<td style="width: 50%; height: 18px;">
+<p>Идентификатор тената</p>
+<p></p>
+</td>
+</tr>
+<tr>
+<td style="width: 25%;">name</td>
+<td style="width: 12.5%;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Нет</span></td>
+<td style="width: 50%;">
+<p>Наименование партнера (клиента)</p>
+</td>
+</tr>
+<tr>
+<td style="width: 25%;">isDeleted</td>
+<td style="width: 12.5%;"><span>bool</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Нет</span></td>
+<td style="width: 50%;">
+<p>Флаг удаления&nbsp;</p>
+</td>
+</tr>
+</tbody>
+</table>
+
+
 <p>Пример ответа:&nbsp;</p>
 <p>Успех, код ответа 200</p>
 <pre> {
@@ -354,6 +394,9 @@ WHERE
 <li><span>isDeleted</span></li>
 </ul> 
 
+#### Иключение 
+<p>2а Сформировать сообщение об ошибке </p>
+
 ### Логика получения данных
 #### Название метода: 
 ```
@@ -361,4 +404,159 @@ GET /tnts/{tenantId}/clients
 ```
 #### Назначние метода: Получение всех партнеров (клиентов)
 
+<p>Входные параметры&nbsp;</p>
+<p><span>path</span>:&nbsp;</p>
+<table border="1" style="border-collapse: collapse; width: 100%; height: 216px;">
+<tbody>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px; text-align: center;"><strong>Значение параметра</strong></td>
+<td style="width: 12.5%; text-align: center;"><strong>Тип</strong></td>
+<td style="width: 12.5%; text-align: center;"><strong>Обязательность</strong></td>
+<td style="width: 50%; height: 18px; text-align: center;"><strong>Описание</strong></td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;"><span>tenantId</span></td>
+<td style="width: 12.5%;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Да</span></td>
+<td style="width: 50%; height: 18px;">
+<p>Идентификатор тената</p>
+<p></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Выходные параметры&nbsp;</p>
+<p><span>body</span>:&nbsp;</p>
+<table border="1" style="border-collapse: collapse; width: 100%; height: 448px;">
+<tbody>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px; text-align: center;"><strong>Значение параметра</strong></td>
+<td style="width: 12.5%; text-align: center; height: 18px;"><strong>Тип</strong></td>
+<td style="width: 12.5%; text-align: center; height: 18px;"><strong>Обязательность</strong></td>
+<td style="width: 50%; height: 18px; text-align: center;"><strong>Описание</strong></td>
+</tr>
+<tr style="height: 46px;">
+<td style="width: 25%; height: 46px;">Массив</td>
+<td style="width: 12.5%; height: 46px;"><span>-</span></td>
+<td style="width: 12.5%; text-align: center; height: 46px;"><span>-</span></td>
+<td style="width: 50%; height: 46px;">
+<p>-</p>
+</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;"><span>id</span></td>
+<td style="width: 12.5%; height: 18px;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center; height: 18px;">Да</td>
+<td style="width: 50%; height: 18px;">
+<p><span>&nbsp;ИД партнера</span></p>
+<p></p>
+</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;"><span>clientId</span></td>
+<td style="width: 12.5%; height: 18px;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center; height: 18px;">Да</td>
+<td style="width: 50%; height: 18px;"><span>client_id партнера</span></td>
+</tr>
+<tr style="height: 118px;">
+<td style="width: 25%; height: 118px;"><span>defaultAccountId</span></td>
+<td style="width: 12.5%; height: 118px;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center; height: 118px;">Да</td>
+<td style="width: 50%; height: 118px;">
+<p><span>Id портфеля, в который будут попадать договоры, если не указан целевой портфель</span></p>
+</td>
+</tr>
+<tr style="height: 46px;">
+<td style="width: 25%; height: 46px;"><span>name</span></td>
+<td style="width: 12.5%; height: 46px;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center; height: 46px;">Да</td>
+<td style="width: 50%; height: 46px;">
+<p><span>Наименование партнера</span></p>
+</td>
+</tr>
+<tr style="height: 46px;">
+<td style="width: 25%; height: 46px;">isDeleted</td>
+<td style="width: 12.5%; height: 46px;"><span>bool</span></td>
+<td style="width: 12.5%; text-align: center; height: 46px;">Да</td>
+<td style="width: 50%; height: 46px;">
+<p>Флаг удаления</p>
+</td>
+</tr>
+<tr style="height: 46px;">
+<td style="width: 25%; height: 46px;">createdAt</td>
+<td style="width: 12.5%; height: 46px;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center; height: 46px;">Да</td>
+<td style="width: 50%; height: 46px;">
+<p>Дата/время создания</p>
+</td>
+</tr>
+<tr style="height: 46px;">
+<td style="width: 25%; height: 46px;">updatedAt</td>
+<td style="width: 12.5%; height: 46px;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center; height: 46px;">Да</td>
+<td style="width: 50%; height: 46px;">
+<p>Дата/время обновления</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Пример ответа:&nbsp;</p>
+<p>Успех, код ответа 200</p>
+<pre>
+[
+ {
+ "id":"1",
+ "clientId": "SRAVNI", 
+ "name": "СРАВНИ",
+ "defaultAccountId": "3",
+ "isDeleted": false,
+  "createdAt": "2025-11-20T15:30:00Z",
+  "updatedAt": "2025-12-20T15:30:00Z"
+  }
+]
+</pre>
+
+### Название сценария: Получение всех партнеров (клиентов)
+#### Триггер: Вызван метод GET /tnts/{tenantId}/clients
+#### Сценарий :
+1. Проверить по tenantId наличие тената в таблице acc_clients. Если запись НЕ найдена, то перейти на шаг 2, иначе исключение 2а
+~~~
+SELECT *
+с.tid
+FROM
+    acc_clients c
+WHERE
+    c.tid = 1 -- фильтрация по ID тената. Вставляем tenantId 
+~~~
+2. Получить данные из таблицы acc_clients, где указан определнный тенат tenantId 
+~~~
+SELECT *
+t.id,
+t.client_id,
+t.default_account_id,
+t.name,
+t.is_deleted,
+t.created_at,
+t.updated_at
+FROM
+    acc_clients c
+JOIN
+    acc_tenants t ON t.id = c.tid 
+WHERE
+    t.id = 1 -- фильтрация по ID тената. Вставляем tenantId 
+~~~
+3. Выполнить маппинг
+   <ul>
+<li>acc_clients.id = id&nbsp;</li>
+<li>acc_clients.client_id =&nbsp;clientId</li>
+<li>acc_clients.default_account_id = defaultAccountId</li>
+<li>acc_clients.name = name</li>
+<li>acc_clients.is_deleted = isDeleted</li>
+<li>acc_clients.created_at = createdAt</li>
+<li>acc_clients.updated_at =&nbsp;updatedAt</li>
+</ul>
+5. Вернуть ответ
+
+#### Иключение 
+<p>2а Сформировать сообщение об ошибке </p>
 
