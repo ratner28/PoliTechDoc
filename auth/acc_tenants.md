@@ -67,7 +67,7 @@
 #### SQL для создания таблицы
 ~~~
 CREATE TABLE IF NOT EXISTS acc_tenants (
-    id BIGINT PRIMARY KEY DEFAULT nextval('account_seq'),
+    id BIGINT PRIMARY KEY ,
     code VARCHAR(250) NOT NULL,
     name VARCHAR(300) NOT NULL,
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
