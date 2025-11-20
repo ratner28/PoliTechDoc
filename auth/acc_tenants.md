@@ -27,7 +27,7 @@
 <td style="text-align: center; height: 36px; width: 107.488px;">VARCHAR(5)</td>
 <td style="text-align: center; height: 36px; width: 138.788px;">Да</td>
 <td style="text-align: center; width: 103.238px;">VSK</td>
-<td style="text-align: center; height: 36px; width: 156.35px;">Код тената</td>
+<td style="text-align: center; height: 36px; width: 156.35px;">Код тенанта</td>
 </tr>
 <tr style="height: 36px;">
 <td style="text-align: center; height: 36px; width: 84.5125px;">name</td>
@@ -35,7 +35,7 @@
 <td style="text-align: center; height: 36px; width: 107.488px;"> VARCHAR(300)</td>
 <td style="text-align: center; height: 36px; width: 138.788px;">Да</td>
 <td style="text-align: center; width: 103.238px;">Вск. Продажа договоров страхования</td>
-<td style="text-align: center; height: 36px; width: 156.35px;">Наименование тената</td>
+<td style="text-align: center; height: 36px; width: 156.35px;">Наименование тенанта</td>
 </tr>
 <tr style="height: 72px;">
 <td style="text-align: center; height: 72px; width: 84.5125px;">is_deleted</td>
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS acc_tenants (
 ```
 POST: /tnts
 ```
-#### Назначние метода: Создание тената 
+#### Назначние метода: Создание тенанта 
 <p>Входные параметры&nbsp;</p>
 <p>body:</p>
 <table border="1" style="border-collapse: collapse; width: 100%; height: 216px;">
@@ -97,7 +97,7 @@ POST: /tnts
 <td style="width: 25%; height: 18px;"><span>code</span></td>
 <td style="width: 12.5%;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center;"><span>Да</span></td>
-<td style="width: 50%; height: 18px;">Код тената</td>
+<td style="width: 50%; height: 18px;">Код тенанта</td>
 </tr>
     </tr>
 <tr style="height: 18px;">
@@ -128,13 +128,13 @@ POST: /tnts
 <td style="width: 25%; height: 18px;"><span>id</span></td>
 <td style="width: 12.5%;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center;"><span>Да</span></td>
-<td style="width: 50%; height: 18px;">Идентфиикатор тената</td>
+<td style="width: 50%; height: 18px;">Идентификатор тенанта</td>
 </tr>
 <tr style="height: 18px;">
 <td style="width: 25%; height: 18px;"><span>code</span></td>
 <td style="width: 12.5%;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center;"><span>Да</span></td>
-<td style="width: 50%; height: 18px;">Код тената</td>
+<td style="width: 50%; height: 18px;">Код тенанта</td>
         </tr>
 <tr style="height: 18px;">
 <td style="width: 25%; height: 18px;"><span>name</span></td>
@@ -154,19 +154,19 @@ POST: /tnts
   }
 </pre>
 
-### Название сценария: Создание тената
+### Название сценария: Создание тенанта
 #### Триггер: Вызван метод POST /tnts
 #### Сценарий :
-<p>1. Проверить по code наличие тената в таблице acc_tenants. Если совпадение НЕ найдено, то перейти на шаг 2, иначе исключение 2а </p></p>
+<p>1. Проверить по code наличие тенанта в таблице acc_tenants. Если совпадение НЕ найдено, то перейти на шаг 2, иначе исключение 2а </p></p>
 <p>2. Проверить значение code, используя рег. выражение ^[a-zA-Z]{1,5}$. Если условие выполнено, то перейти на шаг 3, иначе исключение 3а</p>
 <p>3. Создать в табалице acc_tenants запись</p>
-<p>3.1. Поле id = сгенирировать уникальный идентфикатор</p>
+<p>3.1. Поле id = сгенирировать уникальный идентификатор</p>
 <p>3.2. Поле name = записать значение из вход. параметра "name" </p>
 <p>3.3. Поле code = записать значение из вход. параметра "code" </p>
 <p>3.4. Поле created_at = время/дата текущая</p>
-<p>3.5. Поле&nbsp;is_deleted = по умаолчанию false</p>
+<p>3.5. Поле&nbsp;is_deleted = по умолчанию false</p>
 <p>3.6. Поле updated_at = NULL</p>
-<p>4. Вернуть ответ POST /tnts, где "id" =  уникальный идентфикатор из шага "3.1", "name" из шага "3.2", "code" из шага "3.3"</p>
+<p>4. Вернуть ответ POST /tnts, где "id" =  уникальный идентификатор из шага "3.1", "name" из шага "3.2", "code" из шага "3.3"</p>
 
 #### Иключение 
 
@@ -178,7 +178,7 @@ POST: /tnts
 ```
 GET: /tnts
 ```
-#### Назначние метода: Получение всех активных тенатов
+#### Назначние метода: Получение всех активных идентификатор
 Входные параметры
 No parameters
 Выходные параметры:
@@ -200,18 +200,18 @@ No parameters
 <td style="width: 25%; height: 18px;"><span>id</span></td>
 <td style="width: 12.5%;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center;"><span>Да</span></td>
-<td style="width: 50%; height: 18px;">Идентфиикатор тената</td>
+<td style="width: 50%; height: 18px;">Идентификатор тенанта</td>
 </tr>
 <td style="width: 25%; height: 18px; text-align: center;"><span>code</span></td>
 <td style="width: 12.5%; text-align: center;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center;"><span>Да</span></td>
-<td style="width: 50%; height: 18px; text-align: center;">Код тената</td>
+<td style="width: 50%; height: 18px; text-align: center;">Код тенанта</td>
 </tr>
 <tr style="height: 18px;">
 <td style="width: 25%; height: 18px; text-align: center;"><span>name</span></td>
 <td style="width: 12.5%; text-align: center;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center;"><span>Да</span></td>
-<td style="width: 50%; height: 18px; text-align: center;">Наменование&nbsp;тената</td>
+<td style="width: 50%; height: 18px; text-align: center;">Наменование&nbsp;тенанта</td>
 </tbody>
 </table>
 <p>Пример ответа:&nbsp;</p>
