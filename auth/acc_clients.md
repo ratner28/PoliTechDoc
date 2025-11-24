@@ -87,7 +87,7 @@
 CREATE TABLE IF NOT EXISTS acc_clients (
     tid BIGINT NOT NULL REFERENCES acc_tenants(id),
     id BIGINT PRIMARY KEY,
-    client_idvarchar(255) NOT NULL,
+    client_id varchar(255) NOT NULL,
     default_account_id BIGINT,
     name VARCHAR(250) NOT NULL,
     is_deleted BOOLEAN NOT NUL DEFAULT FALSE,
