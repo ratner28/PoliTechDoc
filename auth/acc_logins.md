@@ -1,5 +1,5 @@
-## Таблица: acc_users
-#### Назначение таблицы: Хранение информации о пользователях
+## Таблица: acc_logins
+#### Назначение таблицы: Хранение информации о пользователях (логинах)
 #### Структура  таблицы
 <table style="width: 717px; height: 313px;">
 <thead>
@@ -32,26 +32,42 @@
 <tr style="height: 36px;">
 <td style="text-align: center; width: 133.712px; height: 36px;">user_login</td>
 <td style="text-align: center; width: 44.225px; height: 36px;">-</td>
-<td style="text-align: center; width: 107.488px; height: 36px;">VARCHAR(250)</td>
+<td style="text-align: center; width: 107.488px; height: 36px;">VARCHAR(255)</td>
 <td style="text-align: center; width: 129.25px; height: 36px;">Да</td>
 <td style="text-align: center; width: 169.113px; height: 36px;"><span>ratner@vsk.ru</span></td>
 <td style="text-align: center; width: 157.55px; height: 36px;">Логин пользователя</td>
 </tr>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;"><span>password</span></td>
+<td style="text-align: center; width: 44.225px; height: 36px;">-</td>
+<td style="width: 12.5%; height: 18px;"><span>VARCHAR(255)</span></td>
+<td style="width: 12.5%; text-align: center; height: 18px;"><span>Нет</span></td>
+<td style="text-align: center; width: 169.113px; height: 36px;"><span>3fd90706aa13b38f74ba8e0ca16cd598</span></td>
+<td style="width: 50%; height: 18px;"><span>Хеш пароля пользователя</span></td>
+</tr>
 <tr style="height: 36px;">
 <td style="text-align: center; width: 133.712px; height: 36px;">full_name</td>
 <td style="text-align: center; width: 44.225px; height: 36px;">-</td>
-<td style="text-align: center; width: 107.488px; height: 36px;">VARCHAR(250)</td>
+<td style="text-align: center; width: 107.488px; height: 36px;">VARCHAR(255)</td>
 <td style="text-align: center; width: 129.25px; height: 36px;">Да</td>
 <td style="text-align: center; width: 169.113px; height: 36px;">Ратнер Екатерина Александровна</td>
 <td style="text-align: center; width: 157.55px; height: 36px;">ФИО</td>
 </tr>
 <tr style="height: 36px;">
-<td style="text-align: center; width: 133.712px; height: 36px;">job_title</td>
+<td style="text-align: center; width: 133.712px; height: 36px;">position</td>
 <td style="text-align: center; width: 44.225px; height: 36px;">-</td>
-<td style="text-align: center; width: 107.488px; height: 36px;">VARCHAR(250)</td>
+<td style="text-align: center; width: 107.488px; height: 36px;">VARCHAR(255)</td>
 <td style="text-align: center; width: 129.25px; height: 36px;">Нет</td>
 <td style="text-align: center; width: 169.113px; height: 36px;">Страховой агент</td>
 <td style="text-align: center; width: 157.55px; height: 36px;">Должность</td>
+</tr>
+<tr style="height: 18px;">
+<td style="text-align: center; width: 133.712px; height: 18px;">is_deleted</td>
+<td style="text-align: center; width: 44.225px; height: 18px;">-</td>
+<td style="text-align: center; width: 107.488px; height: 18px;">BOOLEAN</td>
+<td style="text-align: center; width: 129.25px; height: 18px;">Да</td>
+<td style="text-align: center; width: 169.113px; height: 18px;">false</td>
+<td style="text-align: center; width: 157.55px; height: 18px;">Флаг удаления. True - неактивный(удален), false - активный</td>
 </tr>
 <tr style="height: 18px;">
 <td style="text-align: center; width: 133.712px; height: 18px;">created_at</td>
@@ -75,23 +91,25 @@
 
 #### SQL для создания таблицы:
 ~~~
-CREATE TABLE IF NOT EXISTS acc_users (
+CREATE TABLE IF NOT EXISTS acc_logins (
     id BIGINT PRIMARY KEY ,
     tid BIGINT NOT NULL REFERENCES acc_tenants(id),
     user_login VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     full_name VARCHAR(255) NOT NULL,
-    job_title VARCHAR(255),
+    position VARCHAR(255),
+    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (user_login, tid)
 );
 ~~~
 ### Логика загрузки данных
 #### Название метода: 
 ```
-POST /tnts/{tenantCode}/users
+POST /tnts/{tenantCode}/logins
 ```
-#### Назначние метода: Создание пользователя
+#### Назначение метода: Создание пользователя
 <p>Входные параметры&nbsp;</p>
 <p><span>path</span>:</p>
 <table border="1" style="border-collapse: collapse; width: 100%; height: 216px;">
@@ -129,6 +147,12 @@ POST /tnts/{tenantCode}/users
 <td style="width: 12.5%; text-align: center; height: 18px;"><span>Да</span></td>
 <td style="width: 50%; height: 18px;"><span>Логин пользователя</span></td>
 </tr>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;"><span>password</span></td>
+<td style="width: 12.5%; height: 18px;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center; height: 18px;"><span>Да</span></td>
+<td style="width: 50%; height: 18px;"><span>Пароль пользователя</span></td>
+</tr>
 <tr style="height: 90px;">
 <td style="width: 25%; height: 90px;"><span>fullName</span></td>
 <td style="width: 12.5%; height: 90px;"><span>string</span></td>
@@ -136,7 +160,7 @@ POST /tnts/{tenantCode}/users
 <td style="width: 50%; height: 90px;"><span>ФИО пользователя</span></td>
 </tr>
 <tr style="height: 18px;">
-<td style="width: 25%; height: 18px;"><span>jobTitle</span></td>
+<td style="width: 25%; height: 18px;"><span>position</span></td>
 <td style="width: 12.5%; height: 18px;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center; height: 18px;"><span>Нет</span></td>
 <td style="width: 50%; height: 18px;"><span>Должность</span></td>
@@ -146,8 +170,9 @@ POST /tnts/{tenantCode}/users
 <p>Пример запроса:&nbsp;</p>
 <pre> {
  "userLogin": "ratner@vsk.ru", 
+ "password": "rKIbv677P0",    
  "fullName": "Ратнер Екатерина Александровна", 
- "jobTitle": "Страховой агент"
+ "position": "Страховой агент"
   }
 </pre>
 <p>Выходные параметры:&nbsp;</p>
@@ -178,7 +203,7 @@ POST /tnts/{tenantCode}/users
 <td style="width: 50%; height: 90px;"><span>ФИО пользователя</span></td>
 </tr>
 <tr style="height: 18px;">
-<td style="width: 25%; height: 18px;"><span>jobTitle</span></td>
+<td style="width: 25%; height: 18px;"><span>position</span></td>
 <td style="width: 12.5%; height: 18px;"><span>string</span></td>
 <td style="width: 12.5%; text-align: center; height: 18px;"><span>Нет</span></td>
 <td style="width: 50%; height: 18px;"><span>Должность</span></td>
@@ -192,6 +217,42 @@ POST /tnts/{tenantCode}/users
  "id": "5544888",
  "userLogin": "ratner@vsk.ru", 
  "fullName": "Ратнер Екатерина Александровна",
- "jobTitle": "Страховой агент" 
+ "position": "Страховой агент" 
   }
 </pre>
+
+### Название сценария: Создание пользователя (логина)
+#### Триггер: Вызван метод POST /tnts/{tenantCode}/logins
+#### Сценарий :
+
+1. Проверить, что заполнены обязательные параметры в теле запроса "userLogin", "password", "fullName" и в параметре пути {tenantCode}. Если проверка пройдена, то перейти на шаг 2, иначе исключение 2а
+2. Проверить уникальность пользователя. Если userLogin в таблице acc_logins не существует, то перейти на след. шаг, иначе исключение 3а
+~~~
+SELECT * FROM acc_logins WHERE user_login= '<значение userLogin>';
+~~~
+3. Проверить по tenantCode наличие тенанта в таблице acc_tenants. Если запись найдена, то перейти на шаг 4, иначе исключение 4а
+~~~
+SELECT * FROM acc_tenants WHERE code = '<значение tenantCode>';
+~~~
+<p>4 Создать в таблице acc_logins запись</p>
+<p>4.1. Поле id = сгенерировать уникальный идентификатор </p>
+<p>4.2. Поле tid =  ИД тенанта из таблицы acc_tenants поле id (найти по tenantCode) </p>
+<p>4.3. Поле user_login= значение из вход. параметра "userLogin" </p>
+<p>4.4. Поле password = хеш пароля из вход. параметра  "password" </p>
+<p>4.5. Поле full_name =  значение из вход. параметра "fullName" </p>
+<p>4.6. Поле position =  значение из вход. параметра "position" </p>
+<p>4.7. Поле is_deleted = по умолчанию false</p>
+<p>4.8. Поле created_at = время/дата текущая</p>
+<p>4.9. Поле updated_at = NULL</p>
+<p>5. Вернуть ответ POST/tnts/{tenantCode}/logins, где:
+<ul>
+<li>"id" = значение шаг 4.1 &nbsp;</li>
+<li>"userLogin" = значение шаг 4.3 &nbsp;</li>
+<li>"fullName"= значение шаг 4.5 &nbsp;</li>
+<li>"position" = значение шаг 4.6 &nbsp;</li>
+</ul>
+
+#### Исключение 
+<p>2а Сформировать сообщение об ошибке </p>
+<p>3а Сформировать сообщение об ошибке </p>
+<p>4а Сформировать сообщение об ошибке </p>
