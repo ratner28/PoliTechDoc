@@ -226,13 +226,13 @@ POST /tnts/{tenantCode}/logins
 #### Сценарий :
 
 1. Проверить, что заполнены обязательные параметры в теле запроса "userLogin", "password", "fullName" и в параметре пути {tenantCode}. Если проверка пройдена, то перейти на шаг 2, иначе исключение 2а
-2. Проверить уникальность пользователя. Если userLogin в таблице acc_logins не существует, то перейти на след. шаг, иначе исключение 3а
-~~~
-SELECT * FROM acc_logins WHERE user_login= '<значение userLogin>';
-~~~
-3. Проверить по tenantCode наличие тенанта в таблице acc_tenants. Если запись найдена, то перейти на шаг 4, иначе исключение 4а
+2. Проверить по tenantCode наличие тенанта в таблице acc_tenants. Если запись найдена, то перейти на шаг 3, иначе исключение 3а
 ~~~
 SELECT * FROM acc_tenants WHERE code = '<значение tenantCode>';
+~~~
+3. Проверить уникальность пользователя для данного tenantCode. Если userLogin в таблице acc_logins для данного тенанта НЕ существует, то перейти на след. шаг, иначе исключение 4а
+~~~
+SELECT * FROM acc_logins WHERE user_login= '<значение userLogin>' AND tenantCode = 'значение tenantCode';
 ~~~
 <p>4 Создать в таблице acc_logins запись</p>
 <p>4.1. Поле id = сгенерировать уникальный идентификатор </p>
@@ -256,3 +256,120 @@ SELECT * FROM acc_tenants WHERE code = '<значение tenantCode>';
 <p>2а Сформировать сообщение об ошибке </p>
 <p>3а Сформировать сообщение об ошибке </p>
 <p>4а Сформировать сообщение об ошибке </p>
+
+### Логика обновления данных
+#### Название метода: 
+```
+PATCH/tnts/{tenantCode}/logins/{id}
+```
+Входящие параметры
+<p><span>path</span>:&nbsp;</p>
+<table border="1" style="border-collapse: collapse; width: 100%; height: 216px;">
+<tbody>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px; text-align: center;"><strong>Значение параметра</strong></td>
+<td style="width: 12.5%; text-align: center;"><strong>Тип</strong></td>
+<td style="width: 12.5%; text-align: center;"><strong>Обязательность</strong></td>
+<td style="width: 50%; height: 18px; text-align: center;"><strong>Описание</strong></td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;"><span>tenantCode</span></td>
+<td style="width: 12.5%;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Да</span></td>
+<td style="width: 50%; height: 18px;">
+<p>Код тенанта </p>
+<p></p>
+</td>
+</tr>
+<tr>
+<td style="width: 25%;"><span>id</span></td>
+<td style="width: 12.5%;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Да</span></td>
+<td style="width: 50%;">
+<p>Идентификатор пользователя</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><em>Комментарий: Значение tenantCode можно получить в таблице acc_tenants поле code, значение&nbsp;<span>id в таблице&nbsp;acc_logins поле id</span></em>
+
+<p>body:</p>
+<table border="1" style="border-collapse: collapse; width: 100%; height: 144px;">
+<tbody>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px; text-align: center;"><strong>Значение параметра</strong></td>
+<td style="width: 12.5%; text-align: center; height: 18px;"><strong>Тип</strong></td>
+<td style="width: 12.5%; text-align: center; height: 18px;"><strong>Обязательность</strong></td>
+<td style="width: 50%; height: 18px; text-align: center;"><strong>Описание</strong></td>
+</tr>
+<tr style="height: 90px;">
+<td style="width: 25%; height: 90px;"><span>fullName</span></td>
+<td style="width: 12.5%; height: 90px;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center; height: 90px;"><span>Нет</span></td>
+<td style="width: 50%; height: 90px;"><span>ФИО пользователя</span></td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;"><span>position</span></td>
+<td style="width: 12.5%; height: 18px;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center; height: 18px;"><span>Нет</span></td>
+<td style="width: 50%; height: 18px;"><span>Должность</span></td>
+</tr>
+<tr>
+<td style="width: 25%;">isDeleted</td>
+<td style="width: 12.5%;"><span>bool</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Нет</span></td>
+<td style="width: 50%;">
+<p>Флаг удаления&nbsp;</p>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Пример запроса:&nbsp;</p>
+<p>PUT /tnts/VSK/logins/775988</p>
+<pre> {   
+ "fullName": "Стрельцова Екатерина Александровна", 
+ "position": "Старший страховой агент"
+  }
+</pre>
+<p>Выходные параметры:&nbsp;</p>
+
+<p><span>body</span>:&nbsp;</p>
+<table border="1" style="border-collapse: collapse; width: 100%; height: 216px;">
+<tbody>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px; text-align: center;"><strong>Значение параметра</strong></td>
+<td style="width: 12.5%; text-align: center; height: 18px;"><strong>Тип</strong></td>
+<td style="width: 12.5%; text-align: center; height: 18px;"><strong>Обязательность</strong></td>
+<td style="width: 50%; height: 18px; text-align: center;"><strong>Описание</strong></td>
+</tr>
+<tr style="height: 90px;">
+<td style="width: 25%; height: 90px;"><span>fullName</span></td>
+<td style="width: 12.5%; height: 90px;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center; height: 90px;"><span>Нет</span></td>
+<td style="width: 50%; height: 90px;"><span>ФИО пользователя</span></td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;"><span>position</span></td>
+<td style="width: 12.5%; height: 18px;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center; height: 18px;"><span>Нет</span></td>
+<td style="width: 50%; height: 18px;"><span>Должность</span></td>
+</tr>
+<tr>
+<td style="width: 25%;">isDeleted</td>
+<td style="width: 12.5%;"><span>bool</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Нет</span></td>
+<td style="width: 50%;">
+<p>Флаг удаления&nbsp;</p>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Пример ответа:&nbsp;</p>
+<p>Успех, код ответа 200</p>
+<pre> {
+ "fullName": "Стрельцова Екатерина Александровна", 
+ "position": "Старший страховой агент"
+  }
+</pre>
