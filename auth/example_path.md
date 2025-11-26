@@ -123,3 +123,84 @@ VALUES ('2', '1', 'СРАВНИ', 'SRAVNI', 'false', '2025-11-20T15:30:00Z');
 
 ##### Описание шага:
 
+### Добавить пользователя (УЗ)
+##### Вводная
+<p>Учетная запись пользователя содержит следующие данные: логин (электронная почта), пароль, ФИО и должность пользователя, имеющего доступ в систему.</p>
+<p>УЗ заводятся в рамках тенанта. При этом одна УЗ может быть привязана к нескольким разным портфелям (account), связь обеспечивает таблица acc_accounts_logins. Для хранения информации об учетных записях используется таблица acc_logins.</p>
+
+##### Описание шага:
+###### Создание УЗ
+Для создания новой УЗ и привязки тенанту, необходимо добавить соответствующую запись в таблицу acc_logins следующими способами:
+
+Выполнить прямой SQL-запрос INSERT в таблицу acc_logins
+```
+INSERT INTO acc_logins (id, tid, user_login, full_name, position, is_deleted, created_at)
+VALUES ('2', '1', 'olga.p1@gmail.com', 'Пивоварова Ольга Васильевна', 'Страховой агент', 'false', '2025-11-20T15:30:00Z');
+```
+ИЛИ 
+
+Использовать метод POST /tnts/{tenantId}/logins (см. описание метода https://github.com/ratner28/PoliTechDoc/blob/patch-2/auth/acc_logins.md)
+
+<p>Пример записи в таблице:</p> 
+<table border="1" style="border-collapse: collapse; width: 100%; height: 72px;">
+<tbody>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;">id</td>
+<td style="width: 25%; height: 18px;">tid</td>
+<td style="width: 25%; height: 18px;">user_login</td>
+<td style="width: 25%; height: 18px;">password</td>
+<td style="width: 25%; height: 18px;">full_name</td>
+<td style="width: 12.5%; height: 18px;">position</td>
+<td style="width: 12.5%;">is_deleted</td>
+<td style="width: 12.5%;">created_at</td>  
+<td style="width: 12.5%;">updated_at</td>    
+</tr>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;">2</td>
+<td style="width: 25%; height: 18px;">1</td>
+<td style="width: 25%; height: 18px;">olga.p1@gmail.com</td>
+<td style="width: 12.5%; height: 18px;">null</td>
+<td style="width: 12.5%; height: 18px;">Пивоварова Ольга Васильевна</td>
+<td style="width: 12.5%;">Страховой агент</td>
+<td style="width: 12.5%;">false</td>  
+<td style="width: 12.5%;">2025-11-20T15:30:00Z</td>  
+<td style="width: 12.5%;">NULL</td>    
+</tr>
+</tbody>
+</table>
+<p></p>
+<p></p>
+
+###### Добавление (изменение) пароля для УЗ
+Для добавления пароля для УЗ необходимо использовать метод POST /api/auth/set-password (см. описание метода https://github.com/ratner28/PoliTechDoc/blob/patch-2/auth/acc_logins.md). Чтобы создать/поменять пароль у пользователя должна быть назначена роль SYS_ADMIN.
+После вызова метода пароль хешируется, и его хеш-сумма сохраняется в таблице.
+
+<p>Пример записи в таблице:</p> 
+<table border="1" style="border-collapse: collapse; width: 100%; height: 72px;">
+<tbody>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;">id</td>
+<td style="width: 25%; height: 18px;">tid</td>
+<td style="width: 25%; height: 18px;">user_login</td>
+<td style="width: 25%; height: 18px;">password</td>
+<td style="width: 25%; height: 18px;">full_name</td>
+<td style="width: 12.5%; height: 18px;">position</td>
+<td style="width: 12.5%;">is_deleted</td>
+<td style="width: 12.5%;">created_at</td>  
+<td style="width: 12.5%;">updated_at</td>    
+</tr>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;">2</td>
+<td style="width: 25%; height: 18px;">1</td>
+<td style="width: 25%; height: 18px;">olga.p1@gmail.com</td>
+<td style="width: 12.5%; height: 18px;">3fd90706aa13b38f74ba8e0ca16cd598</td>
+<td style="width: 12.5%; height: 18px;">Пивоварова Ольга Васильевна</td>
+<td style="width: 12.5%;">Страховой агент</td>
+<td style="width: 12.5%;">false</td>  
+<td style="width: 12.5%;">2025-11-20T15:30:00Z</td>  
+<td style="width: 12.5%;">2025-11-21T15:30:00Z</td>    
+</tr>
+</tbody>
+</table>
+<p></p>
+<p></p>
