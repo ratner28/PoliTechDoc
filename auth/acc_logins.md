@@ -633,3 +633,113 @@ WHERE
 
 #### Исключение 
 <p>2а Сформировать сообщение об ошибке </p>
+
+### Логика удаления УЗ
+#### Название метода: 
+```
+DELETE /tnts/{tenantCode}/logins/{id}
+```
+#### Назначние метода: Удаление УЗ пользователя
+Входящие параметры
+<p><span>path</span>:&nbsp;</p>
+<table border="1" style="border-collapse: collapse; width: 100%; height: 216px;">
+<tbody>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px; text-align: center;"><strong>Значение параметра</strong></td>
+<td style="width: 12.5%; text-align: center;"><strong>Тип</strong></td>
+<td style="width: 12.5%; text-align: center;"><strong>Обязательность</strong></td>
+<td style="width: 50%; height: 18px; text-align: center;"><strong>Описание</strong></td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;"><span>tenantCode</span></td>
+<td style="width: 12.5%;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Да</span></td>
+<td style="width: 50%; height: 18px;">
+<p>Код тенанта </p>
+<p></p>
+</td>
+</tr>
+<tr>
+<td style="width: 25%;"><span>id</span></td>
+<td style="width: 12.5%;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Да</span></td>
+<td style="width: 50%;">
+<p>Идентификатор пользователя</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><em>Комментарий: Значение tenantCode можно получить в таблице acc_tenants поле code, значение&nbsp;<span>id в таблице&nbsp;acc_logins поле id</span></em>
+
+<p>Выходные параметры:&nbsp;</p>
+<p><span>body</span>:&nbsp;</p>
+<table border="1" style="border-collapse: collapse; width: 100%; height: 216px;">
+<tbody>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px; text-align: center;"><strong>Значение параметра</strong></td>
+<td style="width: 12.5%; text-align: center; height: 18px;"><strong>Тип</strong></td>
+<td style="width: 12.5%; text-align: center; height: 18px;"><strong>Обязательность</strong></td>
+<td style="width: 50%; height: 18px; text-align: center;"><strong>Описание</strong></td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;"><span>id</span><span><br /></span></td>
+<td style="width: 12.5%; height: 18px;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center; height: 18px;"><span>Да</span></td>
+<td style="width: 50%; height: 18px;"><span>&nbsp;ИД пользователя</span></td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 25%; height: 18px;"><span>userLogin</span></td>
+<td style="width: 12.5%; height: 18px;"><span>string</span></td>
+<td style="width: 12.5%; text-align: center; height: 18px;"><span>Да</span></td>
+<td style="width: 50%; height: 18px;"><span>Логин пользователя</span></td>
+</tr>
+<tr>
+<td style="width: 25%;">isDeleted</td>
+<td style="width: 12.5%;"><span>bool</span></td>
+<td style="width: 12.5%; text-align: center;"><span>Да</span></td>
+<td style="width: 50%;">
+<p>Флаг удаления&nbsp;</p>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Пример ответа:&nbsp;</p>
+<p>Успех, код ответа 201</p>
+<pre> {
+ "id": "5544888",
+ "userLogin": "ratner@vsk.ru", 
+ "isDeleted": true 
+  }
+</pre>
+
+### Название сценария: Удаление УЗ
+#### Триггер: Вызван метод DELETE /tnts/{tenantCode}/logins/{id}
+#### Сценарий :
+1. 1. Проверить по tenantCode наличие тенанта в таблице acc_tenants. Если запись найдена, то перейти на шаг 2, иначе исключение 2а
+~~~
+SELECT * FROM acc_tenants WHERE code = '<значение tenantCode>';
+~~~
+2. Проверить по id наличие пользователя в таблице acc_logins. Если запись найдена, то перейти на шаг 3, иначе исключение 3а
+~~~
+SELECT * FROM acc_logins WHERE id = '<значение id>';
+~~~
+3. Проверить наличие пользователя для данного tenantCode. Если id в таблице acc_logins для данного тенанта существует, то перейти на след. шаг, иначе исключение 4а
+~~~
+SELECT l.* 
+FROM acc_logins l
+INNER JOIN tenants t ON l.tid = t.id
+WHERE t.code = '<значение tenantCode>' AND l.id = '<значение id>';
+~~~
+4. Обновить данные в таблице acc_logins в разерезе конкретного ИД пользователя: табл.acc_logins.is_deleted = true
+5. Верунть ответ:
+<ul>
+<li><span>id</span></li>
+<li><span>user_login</span></li>
+<li><span>isDeleted</span></li>
+</ul> 
+
+#### Исключение 
+<p>2а Сформировать сообщение об ошибке </p>
+<p>3а Сформировать сообщение об ошибке </p>
+<p>4а Сформировать сообщение об ошибке </p>
