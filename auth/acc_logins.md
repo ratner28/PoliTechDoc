@@ -464,7 +464,7 @@ WHERE t.code = '<значение tenantCode>' AND l.id = '<значение id>
 <p>2.2 табл.acc_logins.position = position</p>
 <p>2.3 табл.acc_logins.is_deleted = isDeleted.</p>
 <p>2.4 табл.acc_logins.updated_at = Время/дата текущая </p>
-3. Верунть ответ:
+3. Вернуть ответ:
 <p><em>*в зависмости от переданных параметров</em></p>
 <ul>
 <li><span>fullName</span></li>
@@ -732,7 +732,7 @@ INNER JOIN tenants t ON l.tid = t.id
 WHERE t.code = '<значение tenantCode>' AND l.id = '<значение id>';
 ~~~
 4. Обновить данные в таблице acc_logins в разерезе конкретного ИД пользователя: табл.acc_logins.is_deleted = true
-5. Верунть ответ:
+5. Вернуть ответ:
 <ul>
 <li><span>id</span></li>
 <li><span>user_login</span></li>
